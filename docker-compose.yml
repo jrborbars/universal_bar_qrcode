@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: sqlite:////data/app.db
+      PUBLIC_DOMAIN: http://localhost:3175
+      JWT_SECRET: dev-secret-change-me
+    volumes:
+      - betterdays_sqlite:/data
+    expose:
+      - "8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3175:80"
+
+volumes:
+  betterdays_sqlite:

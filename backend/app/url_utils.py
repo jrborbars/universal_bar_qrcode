@@ -22,14 +22,7 @@ def _detect_lan_ip() -> str | None:
 
 def public_base_url(request: Request) -> str:
     if settings.public_domain:
-        dom = settings.public_domain.rstrip("/")
-        if not (
-            dom.startswith("http://localhost")
-            or dom.startswith("http://127.0.0.1")
-            or dom.startswith("https://localhost")
-            or dom.startswith("https://127.0.0.1")
-        ):
-            return dom
+        return settings.public_domain.rstrip("/")
 
     proto = request.headers.get("x-forwarded-proto")
     host = request.headers.get("x-forwarded-host") or request.headers.get("host")

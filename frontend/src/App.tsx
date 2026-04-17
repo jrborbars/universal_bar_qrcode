@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import { clearToken, getToken } from "./auth";
 import CodePage from "./pages/CodePage";
+import CompanyPage from "./pages/CompanyPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -92,7 +93,9 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/c/:code" element={<CodePage />} />
+            <Route path="/dashboard/company/:companyId" element={<CompanyPage />} />
+            <Route path="/c/:code" element={<CodePage kind="company" />} />
+            <Route path="/p/:code" element={<CodePage kind="product" />} />
           </Routes>
         </main>
       </div>

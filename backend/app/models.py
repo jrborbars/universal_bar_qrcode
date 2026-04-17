@@ -47,3 +47,34 @@ class Company(Base):
     )
 
     owner: Mapped[User] = relationship(back_populates="companies")
+    products: Mapped[list["Product"]] = relationship(back_populates="company")
+
+
+class Product(Base):
+    __tablename__ = "products"
+    __table_args__ = (UniqueConstraint("code", name="uq_products_code"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), index=True)
+
+    sku: Mapped[str] = mapped_column(String(120))
+    code: Mapped[str] = mapped_column(String(220), unique=True, index=True)
+
+    description: Mapped[str] = mapped_column(String(4000))
+    short_description: Mapped[str] = mapped_column(String(600))
+    category: Mapped[str] = mapped_column(String(200))
+    status: Mapped[str] = mapped_column(String(32), index=True)
+
+    weight: Mapped[float | None] = mapped_column(nullable=True)
+    length: Mapped[float | None] = mapped_column(nullable=True)
+    width: Mapped[float | None] = mapped_column(nullable=True)
+    height: Mapped[float | None] = mapped_column(nullable=True)
+    volume: Mapped[float | None] = mapped_column(nullable=True)
+
+    customer_field: Mapped[str] = mapped_column(String(2000))
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: dt.datetime.now(dt.timezone.utc),
+    )
+
+    company: Mapped[Company] = relationship(back_populates="products")

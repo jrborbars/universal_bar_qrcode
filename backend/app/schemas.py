@@ -5,6 +5,7 @@ import datetime as dt
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.cnpj import is_valid_cnpj, normalize_cnpj
+from typing import Literal
 
 
 class TokenResponse(BaseModel):
@@ -128,3 +129,54 @@ class GeocodeCandidate(BaseModel):
 
 class GeocodeSearchResponse(BaseModel):
     items: list[GeocodeCandidate]
+
+
+ProductStatus = Literal["Active", "Draft", "Discontinued"]
+
+
+class ProductCreateRequest(BaseModel):
+    sku: str = Field(min_length=1, max_length=120)
+    description: str = Field(min_length=1, max_length=4000)
+    short_description: str = Field(min_length=1, max_length=600)
+    category: str = Field(min_length=1, max_length=200)
+    status: ProductStatus = "Draft"
+
+    weight: float | None = None
+    length: float | None = None
+    width: float | None = None
+    height: float | None = None
+    volume: float | None = None
+
+    customer_field: str = Field(min_length=0, max_length=2000, default="")
+
+
+class ProductUpdateRequest(ProductCreateRequest):
+    pass
+
+
+class ProductPublic(BaseModel):
+    id: int
+    company_id: int
+    company_name: str
+
+    sku: str
+    code: str
+    public_url: str
+
+    description: str
+    short_description: str
+    category: str
+    status: ProductStatus
+
+    weight: float | None = None
+    length: float | None = None
+    width: float | None = None
+    height: float | None = None
+    volume: float | None = None
+
+    customer_field: str
+    created_at: dt.datetime
+
+
+class ProductListResponse(BaseModel):
+    items: list[ProductPublic]
